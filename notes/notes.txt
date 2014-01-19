@@ -1,0 +1,86 @@
+1. Installation and Configuration:
+
+	- configure application key:
+
+		file config: application/config/application.php
+		value: 'key' => delete the default value first!
+		generate key: php artisan key:generate
+
+	- remove index.php:
+
+		file config: application/config/application.php
+		value: 'index' => delete the default value
+
+	- database configuration:
+
+		file config: application/config/database.php
+		value: 'connections' => choose the db driver that will be used. e.g: 'mysql'
+
+2. Migrations:
+
+	- create application migration table:
+
+		php artisan migrate:install
+
+	- create migration file:
+
+		php artisan migrate:make creata_authors_table
+		=> will create '2013_12_30_034104_create_authors_table.php' inside 'application/migrations' folder
+
+	- create table from a migration file:
+
+		php artisan migrate
+
+	- create migration file to insert dummy data:
+
+		php artisan migrate:make add_authors
+		=> will create '2013_12_30_035024_add_authors.php' inside 'application/migrations' folder
+
+	- undo the migration:
+
+		php artisan migrate:rollback
+
+	- reset the database:
+
+		php artisan migrate:reset
+
+3. Controllers:
+
+	- controller filename: 'application/controllers/authors.php'
+	- class name: 'Authors_Controller'
+	- extends: 'Base_Controller'
+	- action name (regular): 'action_index()'
+	- action name (RESTful): 'get_index()' / 'post_index()'
+	- views location: 'application/views/authors'
+	- route: Route::get('authors', array('uses' => 'authors@index'));
+
+4. Views:
+
+	- location: 'application/views/authors'
+	- layout: 'application/views/layouts'
+	- using layout: @layout('layouts.default')
+	- using section: @section('content')
+
+5. Eloquent:
+
+	- model filename: 'application/models/author.php'
+	- class name: 'Author'
+	- extends: 'Eloquent'
+
+6. Validation:
+
+	- location: 'application/models/author.php'
+	- rules: public static $rules = array()
+	- validation method: 'validate()'
+
+7. Security:
+
+	- csrf protection: 
+
+		- {{ Form::token() }}
+		- Route::post('authors/create', array('before' => 'csrf', 'uses' => 'authors@create'));
+		- Route::post('authors/update', array('before' => 'csrf', 'uses' => 'authors@update'));
+
+	- cross site scripting:
+
+		- HTML::entities()
